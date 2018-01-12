@@ -22,7 +22,7 @@ done
 
 /opt/couchbase/bin/couchbase-cli rebalance -c "$LOCALHOST" -u admin -p password
 
-apt-get install golang
+apt-get -y install golang
 
 touch /root/.provisioned-cluster
 
