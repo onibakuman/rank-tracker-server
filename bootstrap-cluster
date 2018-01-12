@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -f /root/.provisioned-cluster ]; then
+  echo "Already fully provisioned"
+  exit 0
+fi
+
+NODES=$1
+NODESIZE=$2
+LOCALHOST=192.168.23.100
+
+/vagrant/bootstrap-couchbase
+
+/opt/couchbase/bin/couchbase-cli cluster-init -c "$LOCALHOST" --cluster-init-username=admin --cluster-init-password=password --cluster-init-ramsize="$NODESIZE"
+/opt/couchbase/bin/couchbase-cli bucket-create -c "$LOCALHOST" -u admin -p password --bucket=default --bucket-type=couchbase --bucket-ramsize="$NODESIZE"
+
+for (( i=1; i<=$NODES; i++ )) do
+  /opt/couchbase/bin/couchbase-cli server-add -c "$LOCALHOST" -u admin -p password --server-add="192.168.23.10$i" --server-add-username=admin --server-add-password=password
+done
+
+/opt/couchbase/bin/couchbase-cli rebalance -c "$LOCALHOST" -u admin -p password
+
+apt-get install golang
+
+touch /root/.provisioned-cluster
+
+exit 0
