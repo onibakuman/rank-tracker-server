@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -16,3 +16,8 @@ func main() {
 	router.HandleFunc("/people/{id}", DeletePerson).Methods("DELETE")
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
+
+func GetPeople(w http.ResponseWriter, r *http.Request)    {}
+func GetPerson(w http.ResponseWriter, r *http.Request)    {}
+func CreatePerson(w http.ResponseWriter, r *http.Request) {}
+func DeletePerson(w http.ResponseWriter, r *http.Request) {}
